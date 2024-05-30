@@ -8,6 +8,8 @@ const Message = ({ message }) => {
 
   const ref = useRef();
 
+  // console.log("Voice URL:", message.voice);
+
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
@@ -26,11 +28,13 @@ const Message = ({ message }) => {
           }
           alt=""
         />
-        <span>just now</span>
+        {/* <span>just now</span> */}
       </div>
       <div className="messageContent">
         <p>{message.text}</p>
         {message.img && <img src={message.img} alt="" />}
+        {message.video && <video src={message.video} controls></video>}
+        {/* {message.voice && <audio src={message.voice} controls onError={(e) => console.error("Error loading audio:", e)}></audio>} */}
       </div>
     </div>
   );
