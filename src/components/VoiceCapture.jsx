@@ -2,10 +2,11 @@
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import useClipboard from "react-use-clipboard";
 import { useState, useEffect } from "react";
-import { div } from '@tensorflow/tfjs';
+import axios from "axios"
+// import { div } from '@tensorflow/tfjs';
 import { useNavigate } from 'react-router-dom';
-import * as textgears from 'textgears-api'
-import lamejs from 'lamejs';
+// import * as textgears from 'textgears-api'
+// import lamejs from 'lamejs';
 
 import { useVoice } from "../context/VoiceContext.js";
 
@@ -46,19 +47,25 @@ const VoiceCapture = () => {
         console.log("Transcript:", transcript)
         if (transcript) {
             const textToCorrect = transcript.trim();
+            const prompt = `Correct the following text gramatically. Strictly just return the corrected sentence and nothing else. The sentect is ${textToCorrect}`
             if (textToCorrect) {
-                const encodedText = encodeURIComponent(textToCorrect);
-                const apiUrl = `https://api.textgears.com/correct?text=${encodedText}&language=en-GB&key=9hM7bfbvh7Mvbrxg`;
-
-                fetch(apiUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('TextGears API Response:', data.response.corrected);
-                        setVoice(data.response.corrected)
-                    })
-                    .catch(error => {
-                        console.error('Error fetching from TextGears API:', error);
+                try {
+                    const response = await axios({
+                        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBh0pgV-O6iO-FPYCH7hjDwIzKYBepk4Z8`,
+                        method: "post",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        data: {
+                            contents: [{ parts: [{ text: prompt }] }],
+                        },
                     });
+    
+                    setVoice(response.data.candidates[0].content.parts[0].text);
+                } catch (error) {
+                    console.error("Error:", (error.response ? error.response.data : error.message));
+                    setVoice("Sorry - Something went wrong. Please try again!");
+                }
             } else {
                 console.log('No text to correct.');
             }
