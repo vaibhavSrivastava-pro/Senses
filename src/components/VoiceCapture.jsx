@@ -61,7 +61,29 @@ const VoiceCapture = () => {
                         },
                     });
     
-                    setVoice(response.data.candidates[0].content.parts[0].text);
+                    const correctedText = response.data.candidates[0].content.parts[0].text;
+                    setVoice(correctedText);
+                
+                    // const playhtRequestData = {
+                    //     quality: 'medium',
+                    //     output_format: 'mp3',
+                    //     speed: 1,
+                    //     sample_rate: 24000,
+                    //     text: correctedText,
+                    //     voice: "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json"
+                    // };
+    
+                    // const audioResponse = await axios.post(
+                    //     'https://senses-a1ca7d3zr-vaibhav-srivastavas-projects.vercel.app/api/ttsProxy',
+                    //     playhtRequestData,
+                    //     { responseType: 'arraybuffer' }
+                    // );
+                    
+                    // const audioBlob = new Blob([audioResponse.data], { type: 'audio/mpeg' });
+                    // const audioUrl = URL.createObjectURL(audioBlob);
+                    // setVoice(audioUrl);
+
+                    // setVoice(audioUrl); // Set the voice state to the audio URL
                 } catch (error) {
                     console.error("Error:", (error.response ? error.response.data : error.message));
                     setVoice("Sorry - Something went wrong. Please try again!");
