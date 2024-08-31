@@ -51,7 +51,7 @@ const VoiceCapture = () => {
             if (textToCorrect) {
                 try {
                     const response = await axios({
-                        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBh0pgV-O6iO-FPYCH7hjDwIzKYBepk4Z8`,
+                        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY}`,
                         method: "post",
                         headers: {
                             'Content-Type': 'application/json',
